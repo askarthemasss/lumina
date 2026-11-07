@@ -1,0 +1,729 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0047809FA261C276841246A2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF451096B6FA92B324A6E38 /* HomeView.swift */; };
+		046CCE865BA023169337D312 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0FD7B59BBC2BC5BBFBC173E /* Assets.xcassets */; };
+		04BE5DC86D956474539737EA /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04F4B11CA00D9D31849D016 /* RootView.swift */; };
+		0A015A4D6273FF2AE39D8DC7 /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B602D1F72805A8B3DE05F6D /* TranscriptionService.swift */; };
+		168AF1FC85E2FBCF79524282 /* IndexStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA097DFF11489ACF8AB123E2 /* IndexStore.swift */; };
+		1B0865DAAE28F8BF79B8223F /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A071C74F3F23DC3C0364C38B /* libsqlite3.tbd */; };
+		1CF0E9D69F15392A1218B4A3 /* VectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1DC0D3BA9FEC38DDC0AEAC /* VectorMath.swift */; };
+		1FCAED7463898987EE1D4CF3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E140A95D3C273C8E3FA3906 /* AVFoundation.framework */; };
+		20CB8BAB2057C9AC5C95580C /* LuminaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABA089174C4190A7F33824D /* LuminaTests.swift */; };
+		25B126AD3F7550D42242F8EC /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACBBFD4B35709BFDEFA6960 /* Components.swift */; };
+		29FBCE4C30F1E582CA692570 /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D77496543F10442C8B97C /* SearchService.swift */; };
+		2E984D51570683ECEB575E41 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A41F67A43508C36B167EB0 /* TimelineView.swift */; };
+		30D09CDEB365DE42EDE4105B /* InferenceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F144C8E83BE67B3B8845E283 /* InferenceClient.swift */; };
+		3182911A712C16288AAA157A /* FileScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0496E43A23A6F3D2B86064D /* FileScanner.swift */; };
+		407F74737FB9525EC904E023 /* ContentExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB46497640D5A47C529FD6D5 /* ContentExtractor.swift */; };
+		4292A5CE02BFE2BC12297444 /* IndexStore+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F06B31CCFB1BED89ACEC513 /* IndexStore+Chat.swift */; };
+		4AEE4B5508F4BA87D23306A1 /* IndexStore+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD79B7830F9B635A5829917B /* IndexStore+Search.swift */; };
+		4BF44D588CF22941C68F739B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11293326B17E1DEAC488DA6 /* Theme.swift */; };
+		51546BA1DD4AA0F06FFABE10 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 944979B09F8E0D55C3D2B8CB /* PrivacyInfo.xcprivacy */; };
+		51582BA9D7D88D12C7E69B75 /* LuminaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCADFABC767184153B72652 /* LuminaApp.swift */; };
+		5737866D0520E77C095E2E69 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F427A300AF2ECA1F940B86 /* Models.swift */; };
+		5E91F95DFE1BD221455E62B3 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606A365218BDEF2C1446D985 /* LibraryView.swift */; };
+		62A8EFC3648CEC690FF85C89 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C06C98FEAB8F2ACE90B2E9 /* AppSettings.swift */; };
+		6F66911AEDDBB95704095EF7 /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85367CD6C4E7DF94B1CCCB /* HotKeyManager.swift */; };
+		712C9C18B3E900339A530853 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97E451629657D3A16673BC1 /* ChatView.swift */; };
+		76A37D3EAA5AAA5F966D8415 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2961855875D7CC9D3AA41B93 /* AppModel.swift */; };
+		7A711179830CD7C04768E7A5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F95582F3631600B413B82 /* SettingsView.swift */; };
+		893CC67220C0043059FFE058 /* OfficeTextExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974A4B168DA937F5D504829F /* OfficeTextExtractor.swift */; };
+		896FB38217FD2147833C3EDF /* IndexingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9865D779D6655372B63047F0 /* IndexingEngine.swift */; };
+		8EC088AE02CB7A4A903142EA /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44750656EA4BCC6917E36AC1 /* Commands.swift */; };
+		A7CE3D818B755D59A506A88F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0B30846AF73A3861C82FBD2 /* Vision.framework */; };
+		A88278242382C6711AB69C85 /* RuntimeDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1516096D936C3A7DC76C17B5 /* RuntimeDiscovery.swift */; };
+		AC7F7EF03AC8AF32C0A35EC0 /* RAGService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45F2D080FB5B97B9CB0029 /* RAGService.swift */; };
+		B08FBE9BD150F4A5396B548B /* LuminaMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E51F9FEFE61A62512ECEE70 /* LuminaMark.swift */; };
+		B83F75CB15E1E067CD1341B8 /* SQLiteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1882763CD5CD273C9FC59365 /* SQLiteDatabase.swift */; };
+		C3228F19CBDB0D3F80E64476 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1603D2FFF7BDFD1C84D2EB28 /* Carbon.framework */; };
+		C42CBBE33C64D03478B77F96 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D31E9757566FC9D1809BD1 /* SearchView.swift */; };
+		C519182BA3A7FD0FFED20427 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE02DB5E3858608AB9F1D292 /* Speech.framework */; };
+		CA91E838B18E155869762804 /* QuickSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97C05991F60CE0CB79F3E83D /* QuickSearchView.swift */; };
+		D1FC3EA336C4FD6A56130F47 /* FilePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2317B56355E2A981EB77FB /* FilePreviewView.swift */; };
+		EAABDB4C10AB395FAC3A24E6 /* SetupGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4929AB7B023E087F8D05574 /* SetupGuideView.swift */; };
+		EE75F3DD846E0EDA991F6D1A /* TextChunker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757C6E525BE0CC08474382E /* TextChunker.swift */; };
+		F340215AD0CC931364BE29B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6966F3300FAFA63F8EEF9B /* AppDelegate.swift */; };
+		F60F4EE8376FDE7128096BE6 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95E2C341F0019B96BF0F83A8 /* PDFKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E360B6D4536969E78632DF99 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7FFF60DE231DDF151176399C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 003A7B71BD4C1C8E4F3E980E;
+			remoteInfo = Lumina;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		09F427A300AF2ECA1F940B86 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		1516096D936C3A7DC76C17B5 /* RuntimeDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeDiscovery.swift; sourceTree = "<group>"; };
+		1603D2FFF7BDFD1C84D2EB28 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		1882763CD5CD273C9FC59365 /* SQLiteDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteDatabase.swift; sourceTree = "<group>"; };
+		1B602D1F72805A8B3DE05F6D /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
+		2961855875D7CC9D3AA41B93 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		2C4F95582F3631600B413B82 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2E51F9FEFE61A62512ECEE70 /* LuminaMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuminaMark.swift; sourceTree = "<group>"; };
+		3D45F2D080FB5B97B9CB0029 /* RAGService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAGService.swift; sourceTree = "<group>"; };
+		44750656EA4BCC6917E36AC1 /* Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
+		4F6966F3300FAFA63F8EEF9B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4FF451096B6FA92B324A6E38 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		5757C6E525BE0CC08474382E /* TextChunker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChunker.swift; sourceTree = "<group>"; };
+		5BCADFABC767184153B72652 /* LuminaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuminaApp.swift; sourceTree = "<group>"; };
+		606A365218BDEF2C1446D985 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		61C06C98FEAB8F2ACE90B2E9 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		6E140A95D3C273C8E3FA3906 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		7D85367CD6C4E7DF94B1CCCB /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
+		7E7D77496543F10442C8B97C /* SearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
+		8E1DC0D3BA9FEC38DDC0AEAC /* VectorMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorMath.swift; sourceTree = "<group>"; };
+		8F87AB18FB6C7893A160328B /* Lumina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lumina.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		944979B09F8E0D55C3D2B8CB /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		95E2C341F0019B96BF0F83A8 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
+		974A4B168DA937F5D504829F /* OfficeTextExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfficeTextExtractor.swift; sourceTree = "<group>"; };
+		97C05991F60CE0CB79F3E83D /* QuickSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchView.swift; sourceTree = "<group>"; };
+		9865D779D6655372B63047F0 /* IndexingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexingEngine.swift; sourceTree = "<group>"; };
+		9ABA089174C4190A7F33824D /* LuminaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuminaTests.swift; sourceTree = "<group>"; };
+		9ACBBFD4B35709BFDEFA6960 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		9B2317B56355E2A981EB77FB /* FilePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePreviewView.swift; sourceTree = "<group>"; };
+		9F06B31CCFB1BED89ACEC513 /* IndexStore+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IndexStore+Chat.swift"; sourceTree = "<group>"; };
+		A071C74F3F23DC3C0364C38B /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		A0D31E9757566FC9D1809BD1 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		B04F4B11CA00D9D31849D016 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		B0FD7B59BBC2BC5BBFBC173E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B4A41F67A43508C36B167EB0 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		B97E451629657D3A16673BC1 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		BA097DFF11489ACF8AB123E2 /* IndexStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexStore.swift; sourceTree = "<group>"; };
+		C0496E43A23A6F3D2B86064D /* FileScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileScanner.swift; sourceTree = "<group>"; };
+		C0B30846AF73A3861C82FBD2 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
+		C4929AB7B023E087F8D05574 /* SetupGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupGuideView.swift; sourceTree = "<group>"; };
+		DD79B7830F9B635A5829917B /* IndexStore+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IndexStore+Search.swift"; sourceTree = "<group>"; };
+		E11293326B17E1DEAC488DA6 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		E4CFB5505E7F2F65E39DC858 /* LuminaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LuminaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F144C8E83BE67B3B8845E283 /* InferenceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InferenceClient.swift; sourceTree = "<group>"; };
+		FB46497640D5A47C529FD6D5 /* ContentExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentExtractor.swift; sourceTree = "<group>"; };
+		FE02DB5E3858608AB9F1D292 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		548A7FE9B4969E6C1B647F5F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3228F19CBDB0D3F80E64476 /* Carbon.framework in Frameworks */,
+				C519182BA3A7FD0FFED20427 /* Speech.framework in Frameworks */,
+				A7CE3D818B755D59A506A88F /* Vision.framework in Frameworks */,
+				F60F4EE8376FDE7128096BE6 /* PDFKit.framework in Frameworks */,
+				1FCAED7463898987EE1D4CF3 /* AVFoundation.framework in Frameworks */,
+				1B0865DAAE28F8BF79B8223F /* libsqlite3.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		141108036DE9CC099AD87480 = {
+			isa = PBXGroup;
+			children = (
+				2C3660BB969A8D96A260C19D /* AppResources */,
+				694998D304F2A51D8EDD3033 /* Sources */,
+				217A37D838C719C13CAEC04E /* Tests */,
+				675E98D22D845275C395067F /* Frameworks */,
+				463083206E6F3BD093827132 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1F04F7CBC111712D85DEE955 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				B97E451629657D3A16673BC1 /* ChatView.swift */,
+				9B2317B56355E2A981EB77FB /* FilePreviewView.swift */,
+				4FF451096B6FA92B324A6E38 /* HomeView.swift */,
+				606A365218BDEF2C1446D985 /* LibraryView.swift */,
+				97C05991F60CE0CB79F3E83D /* QuickSearchView.swift */,
+				B04F4B11CA00D9D31849D016 /* RootView.swift */,
+				A0D31E9757566FC9D1809BD1 /* SearchView.swift */,
+				2C4F95582F3631600B413B82 /* SettingsView.swift */,
+				C4929AB7B023E087F8D05574 /* SetupGuideView.swift */,
+				B4A41F67A43508C36B167EB0 /* TimelineView.swift */,
+				27327A0DB686091769834414 /* Chat */,
+				F8D388E56E2AF0C5C22D08C4 /* Home */,
+				8005809F07B4DBE5B4BB7AD2 /* Library */,
+				429B85D709BC72FF90A6AEEE /* Search */,
+				1F4749BFA2352B4DAB1F4048 /* Settings */,
+				2BB7AA71EA373679282AC920 /* Timeline */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		1F4749BFA2352B4DAB1F4048 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		217A37D838C719C13CAEC04E /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				32A725516927D3042A8088B8 /* LuminaTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		27029011F48759B0D2DDDA96 /* Lumina */ = {
+			isa = PBXGroup;
+			children = (
+				BC978DA45E9DBBFB2270D56C /* App */,
+				6278951779F1571E4EAEE21E /* Design */,
+				1F04F7CBC111712D85DEE955 /* Features */,
+				4F3FEE87C41A5FF612AACEE1 /* Models */,
+				4E02D974C404607F77398CA6 /* Services */,
+			);
+			path = Lumina;
+			sourceTree = "<group>";
+		};
+		27327A0DB686091769834414 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		2BB7AA71EA373679282AC920 /* Timeline */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Timeline;
+			sourceTree = "<group>";
+		};
+		2C3660BB969A8D96A260C19D /* AppResources */ = {
+			isa = PBXGroup;
+			children = (
+				B0FD7B59BBC2BC5BBFBC173E /* Assets.xcassets */,
+				944979B09F8E0D55C3D2B8CB /* PrivacyInfo.xcprivacy */,
+			);
+			path = AppResources;
+			sourceTree = "<group>";
+		};
+		32A725516927D3042A8088B8 /* LuminaTests */ = {
+			isa = PBXGroup;
+			children = (
+				9ABA089174C4190A7F33824D /* LuminaTests.swift */,
+			);
+			path = LuminaTests;
+			sourceTree = "<group>";
+		};
+		429B85D709BC72FF90A6AEEE /* Search */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		463083206E6F3BD093827132 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8F87AB18FB6C7893A160328B /* Lumina.app */,
+				E4CFB5505E7F2F65E39DC858 /* LuminaTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4E02D974C404607F77398CA6 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BA097DFF11489ACF8AB123E2 /* IndexStore.swift */,
+				9F06B31CCFB1BED89ACEC513 /* IndexStore+Chat.swift */,
+				DD79B7830F9B635A5829917B /* IndexStore+Search.swift */,
+				F144C8E83BE67B3B8845E283 /* InferenceClient.swift */,
+				3D45F2D080FB5B97B9CB0029 /* RAGService.swift */,
+				1516096D936C3A7DC76C17B5 /* RuntimeDiscovery.swift */,
+				7E7D77496543F10442C8B97C /* SearchService.swift */,
+				1882763CD5CD273C9FC59365 /* SQLiteDatabase.swift */,
+				B1451E5B4FAB243D5EA78E3E /* Indexing */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4F3FEE87C41A5FF612AACEE1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				09F427A300AF2ECA1F940B86 /* Models.swift */,
+				8E1DC0D3BA9FEC38DDC0AEAC /* VectorMath.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6278951779F1571E4EAEE21E /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				9ACBBFD4B35709BFDEFA6960 /* Components.swift */,
+				2E51F9FEFE61A62512ECEE70 /* LuminaMark.swift */,
+				E11293326B17E1DEAC488DA6 /* Theme.swift */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		675E98D22D845275C395067F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6E140A95D3C273C8E3FA3906 /* AVFoundation.framework */,
+				1603D2FFF7BDFD1C84D2EB28 /* Carbon.framework */,
+				A071C74F3F23DC3C0364C38B /* libsqlite3.tbd */,
+				95E2C341F0019B96BF0F83A8 /* PDFKit.framework */,
+				FE02DB5E3858608AB9F1D292 /* Speech.framework */,
+				C0B30846AF73A3861C82FBD2 /* Vision.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		694998D304F2A51D8EDD3033 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				27029011F48759B0D2DDDA96 /* Lumina */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		8005809F07B4DBE5B4BB7AD2 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		B1451E5B4FAB243D5EA78E3E /* Indexing */ = {
+			isa = PBXGroup;
+			children = (
+				FB46497640D5A47C529FD6D5 /* ContentExtractor.swift */,
+				C0496E43A23A6F3D2B86064D /* FileScanner.swift */,
+				9865D779D6655372B63047F0 /* IndexingEngine.swift */,
+				974A4B168DA937F5D504829F /* OfficeTextExtractor.swift */,
+				5757C6E525BE0CC08474382E /* TextChunker.swift */,
+				1B602D1F72805A8B3DE05F6D /* TranscriptionService.swift */,
+			);
+			path = Indexing;
+			sourceTree = "<group>";
+		};
+		BC978DA45E9DBBFB2270D56C /* App */ = {
+			isa = PBXGroup;
+			children = (
+				4F6966F3300FAFA63F8EEF9B /* AppDelegate.swift */,
+				2961855875D7CC9D3AA41B93 /* AppModel.swift */,
+				61C06C98FEAB8F2ACE90B2E9 /* AppSettings.swift */,
+				44750656EA4BCC6917E36AC1 /* Commands.swift */,
+				7D85367CD6C4E7DF94B1CCCB /* HotKeyManager.swift */,
+				5BCADFABC767184153B72652 /* LuminaApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F8D388E56E2AF0C5C22D08C4 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		003A7B71BD4C1C8E4F3E980E /* Lumina */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A399A6C99761C0E569B6710 /* Build configuration list for PBXNativeTarget "Lumina" */;
+			buildPhases = (
+				F607145BE5FA0B08EF3598F9 /* Sources */,
+				4FAA79D8840CA9B1935169BC /* Resources */,
+				548A7FE9B4969E6C1B647F5F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Lumina;
+			packageProductDependencies = (
+			);
+			productName = Lumina;
+			productReference = 8F87AB18FB6C7893A160328B /* Lumina.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DF2E9A6E915CFB40AC78D3F4 /* LuminaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A5B380261216523670CA5F1 /* Build configuration list for PBXNativeTarget "LuminaTests" */;
+			buildPhases = (
+				3EFD69186A118A180356E3C8 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D554DB09FDF09D8A667FB9A5 /* PBXTargetDependency */,
+			);
+			name = LuminaTests;
+			packageProductDependencies = (
+			);
+			productName = LuminaTests;
+			productReference = E4CFB5505E7F2F65E39DC858 /* LuminaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7FFF60DE231DDF151176399C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					003A7B71BD4C1C8E4F3E980E = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					DF2E9A6E915CFB40AC78D3F4 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 24FC4A5DE396D7CFFC98D2F5 /* Build configuration list for PBXProject "Lumina" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 141108036DE9CC099AD87480;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 463083206E6F3BD093827132 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				003A7B71BD4C1C8E4F3E980E /* Lumina */,
+				DF2E9A6E915CFB40AC78D3F4 /* LuminaTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4FAA79D8840CA9B1935169BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				046CCE865BA023169337D312 /* Assets.xcassets in Resources */,
+				51546BA1DD4AA0F06FFABE10 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3EFD69186A118A180356E3C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20CB8BAB2057C9AC5C95580C /* LuminaTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F607145BE5FA0B08EF3598F9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F340215AD0CC931364BE29B1 /* AppDelegate.swift in Sources */,
+				76A37D3EAA5AAA5F966D8415 /* AppModel.swift in Sources */,
+				62A8EFC3648CEC690FF85C89 /* AppSettings.swift in Sources */,
+				712C9C18B3E900339A530853 /* ChatView.swift in Sources */,
+				8EC088AE02CB7A4A903142EA /* Commands.swift in Sources */,
+				25B126AD3F7550D42242F8EC /* Components.swift in Sources */,
+				407F74737FB9525EC904E023 /* ContentExtractor.swift in Sources */,
+				D1FC3EA336C4FD6A56130F47 /* FilePreviewView.swift in Sources */,
+				3182911A712C16288AAA157A /* FileScanner.swift in Sources */,
+				0047809FA261C276841246A2 /* HomeView.swift in Sources */,
+				6F66911AEDDBB95704095EF7 /* HotKeyManager.swift in Sources */,
+				4292A5CE02BFE2BC12297444 /* IndexStore+Chat.swift in Sources */,
+				4AEE4B5508F4BA87D23306A1 /* IndexStore+Search.swift in Sources */,
+				168AF1FC85E2FBCF79524282 /* IndexStore.swift in Sources */,
+				896FB38217FD2147833C3EDF /* IndexingEngine.swift in Sources */,
+				30D09CDEB365DE42EDE4105B /* InferenceClient.swift in Sources */,
+				5E91F95DFE1BD221455E62B3 /* LibraryView.swift in Sources */,
+				51582BA9D7D88D12C7E69B75 /* LuminaApp.swift in Sources */,
+				B08FBE9BD150F4A5396B548B /* LuminaMark.swift in Sources */,
+				5737866D0520E77C095E2E69 /* Models.swift in Sources */,
+				893CC67220C0043059FFE058 /* OfficeTextExtractor.swift in Sources */,
+				CA91E838B18E155869762804 /* QuickSearchView.swift in Sources */,
+				AC7F7EF03AC8AF32C0A35EC0 /* RAGService.swift in Sources */,
+				04BE5DC86D956474539737EA /* RootView.swift in Sources */,
+				A88278242382C6711AB69C85 /* RuntimeDiscovery.swift in Sources */,
+				B83F75CB15E1E067CD1341B8 /* SQLiteDatabase.swift in Sources */,
+				29FBCE4C30F1E582CA692570 /* SearchService.swift in Sources */,
+				C42CBBE33C64D03478B77F96 /* SearchView.swift in Sources */,
+				7A711179830CD7C04768E7A5 /* SettingsView.swift in Sources */,
+				EAABDB4C10AB395FAC3A24E6 /* SetupGuideView.swift in Sources */,
+				EE75F3DD846E0EDA991F6D1A /* TextChunker.swift in Sources */,
+				4BF44D588CF22941C68F739B /* Theme.swift in Sources */,
+				2E984D51570683ECEB575E41 /* TimelineView.swift in Sources */,
+				0A015A4D6273FF2AE39D8DC7 /* TranscriptionService.swift in Sources */,
+				1CF0E9D69F15392A1218B4A3 /* VectorMath.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D554DB09FDF09D8A667FB9A5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 003A7B71BD4C1C8E4F3E980E /* Lumina */;
+			targetProxy = E360B6D4536969E78632DF99 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		064D50AA4BDA917CEDE4AEB0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lumina.app.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lumina.app/Contents/MacOS/Lumina";
+			};
+			name = Debug;
+		};
+		4D3C454254744EE3A74EBB9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AppResources/Lumina.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = AppResources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lumina.app;
+				PRODUCT_NAME = Lumina;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		CEF6C129E9DC9B564E397735 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		E1A2660A84CA4DB2FCC1AF93 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lumina.app.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lumina.app/Contents/MacOS/Lumina";
+			};
+			name = Release;
+		};
+		E800FB954B0335D2B2617564 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AppResources/Lumina.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = AppResources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lumina.app;
+				PRODUCT_NAME = Lumina;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		FB109BD7209C1DCEB2D6C343 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		24FC4A5DE396D7CFFC98D2F5 /* Build configuration list for PBXProject "Lumina" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CEF6C129E9DC9B564E397735 /* Debug */,
+				FB109BD7209C1DCEB2D6C343 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2A399A6C99761C0E569B6710 /* Build configuration list for PBXNativeTarget "Lumina" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D3C454254744EE3A74EBB9F /* Debug */,
+				E800FB954B0335D2B2617564 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5A5B380261216523670CA5F1 /* Build configuration list for PBXNativeTarget "LuminaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064D50AA4BDA917CEDE4AEB0 /* Debug */,
+				E1A2660A84CA4DB2FCC1AF93 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7FFF60DE231DDF151176399C /* Project object */;
+}

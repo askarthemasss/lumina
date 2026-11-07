@@ -1,0 +1,14 @@
+.DS_Store
+build/
+.build/
+.swiftpm/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+.env
+dist/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

@@ -1,0 +1,69 @@
+name: Lumina
+options:
+  bundleIdPrefix: com.lumina
+  minimumXcodeGenVersion: 2.38.0
+  xcodeVersion: "16.0"
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_HARDENED_RUNTIME: YES
+    DEAD_CODE_STRIPPING: YES
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 1.0.0
+
+targets:
+  Lumina:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/Lumina
+      - path: AppResources/Assets.xcassets
+        buildPhase: resources
+      - path: AppResources/PrivacyInfo.xcprivacy
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lumina.app
+        PRODUCT_NAME: Lumina
+        INFOPLIST_FILE: AppResources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AppResources/Lumina.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        COMBINE_HIDPI_IMAGES: YES
+        ENABLE_PREVIEWS: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LD_RUNPATH_SEARCH_PATHS:
+          - "$(inherited)"
+          - "@executable_path/../Frameworks"
+    dependencies:
+      - sdk: Carbon.framework
+      - sdk: Speech.framework
+      - sdk: Vision.framework
+      - sdk: PDFKit.framework
+      - sdk: AVFoundation.framework
+      - sdk: libsqlite3.tbd
+    scheme:
+      testTargets:
+        - LuminaTests
+      gatherCoverageData: false
+
+  LuminaTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/LuminaTests
+    dependencies:
+      - target: Lumina
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lumina.app.tests
+        GENERATE_INFOPLIST_FILE: YES
