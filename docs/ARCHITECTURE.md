@@ -325,12 +325,13 @@ One accent color is selected in Settings and applied via `.tint` and `.accentCol
 - FTS term extraction and query construction, including quotes and empty queries.
 - End-to-end store behavior: file save, keyword/semantic/filename search, filters, pins, notes, conversations, timeline, stats, reset, erase.
 - The plain-text indexing pipeline and scanner exclusions without any model.
+- Ollama NDJSON and OpenAI-compatible SSE streaming parsers, using a stubbed `URLProtocol`.
 
-An opt-in suite (`LUMINA_LIVE_OLLAMA=1`) checks health and model discovery against a real Ollama instance. It is skipped by default so the suite stays deterministic.
+An opt-in suite (`LUMINA_LIVE_OLLAMA=1`) checks health, model discovery, and a real embedding/indexing round-trip against a local Ollama instance. It is skipped by default so the suite stays deterministic.
 
 The Swift Testing choice keeps the suite buildable with Command Line Tools. `scripts/test.sh` supplies the framework search path only when needed.
 
-Not covered by automated tests: SwiftUI layout, actual model streaming, Vision/Speech extraction, and filesystem permissions. Those need a full Xcode run and a real local runtime.
+Not covered by automated tests: SwiftUI layout, live chat generation against a running model, Vision/Speech extraction, and filesystem permissions. The streaming parsers are covered with stubs; a full live chat run needs a model that fits the machine's memory.
 
 ---
 

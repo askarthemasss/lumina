@@ -1,7 +1,11 @@
 #!/bin/bash
 # Builds Lumina with SwiftPM and assembles a runnable .app bundle in dist/.
-# XcodeGen remains the canonical project generator; this script is for quick
-# local smoke tests on machines without a full Xcode installation.
+# XcodeGen remains the canonical project generator; this script supports local
+# smoke tests and release packaging without a full Xcode installation.
+#
+# Set SIGN_IDENTITY to a Developer ID Application identity for distribution:
+#   SIGN_IDENTITY="Developer ID Application: Name (TEAMID)" ./scripts/package_app.sh
+# With no identity, the app is ad-hoc signed for local use only.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -9,6 +13,7 @@ CONFIGURATION="${CONFIGURATION:-release}"
 APP_NAME="Lumina"
 BUNDLE_ID="com.lumina.app"
 APP="dist/${APP_NAME}.app"
+SIGN_IDENTITY="${SIGN_IDENTITY:--}"
 
 swift build -c "$CONFIGURATION"
 BIN_DIR="$(swift build -c "$CONFIGURATION" --show-bin-path)"
@@ -32,8 +37,20 @@ cp AppResources/Assets.xcassets/AppIcon.appiconset/*.png "$ICONSET/"
 iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/AppIcon.icns"
 rm -rf "$(dirname "$ICONSET")"
 
-# Ad-hoc signing keeps Gatekeeper and macOS privacy prompts coherent for a
-# local build. Distribution builds should be signed with a Developer ID.
-codesign --force --deep --sign - "$APP" >/dev/null 2>&1
+ENTITLEMENTS="AppResources/Lumina.entitlements"
+if [[ "$SIGN_IDENTITY" == "-" ]]; then
+    # Ad-hoc signing keeps Gatekeeper and macOS privacy prompts coherent for a
+    # local build. Distribution builds need a Developer ID identity.
+    codesign --force --sign - --entitlements "$ENTITLEMENTS" "$APP" >/dev/null
+else
+    codesign \
+        --force \
+        --options runtime \
+        --timestamp \
+        --sign "$SIGN_IDENTITY" \
+        --entitlements "$ENTITLEMENTS" \
+        "$APP"
+fi
+codesign --verify --strict --verbose=2 "$APP"
 
-echo "Built $APP"
+echo "Built $APP (signed with $SIGN_IDENTITY)"

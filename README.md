@@ -136,7 +136,7 @@ CONFIGURATION=release ./scripts/package_app.sh
 open dist/Lumina.app
 ```
 
-The packaging script assembles a minimal `.app`, compiles the generated `.icns`, and ad-hoc signs it. For distribution, sign with a Developer ID and notarize; see Apple's `notarytool` documentation.
+The packaging script assembles a minimal `.app`, compiles the generated `.icns`, applies the entitlements, and ad-hoc signs it. For distribution, set `SIGN_IDENTITY` to a Developer ID Application identity, build a DMG with `./scripts/make_dmg.sh`, and notarize it. The tag-driven GitHub release workflow and the full credential setup are documented in [`docs/RELEASING.md`](docs/RELEASING.md).
 
 ### Tests
 
@@ -144,7 +144,7 @@ The packaging script assembles a minimal `.app`, compiles the generated `.icns`,
 ./scripts/test.sh
 ```
 
-The suite uses **Swift Testing** (25 deterministic tests) and covers vector math, chunking, HTML extraction, model recommendations, loopback enforcement, FTS query construction, keyword/semantic/filename search and filtering, notes/pins/conversations, reset/erase, and the plain-text indexing pipeline. With a full Xcode installation you can also press **⌘U**; the `Lumina` scheme includes the `LuminaTests` target.
+The suite uses **Swift Testing** (27 deterministic tests) and covers vector math, chunking, HTML extraction, model recommendations, loopback enforcement, FTS query construction, keyword/semantic/filename search and filtering, notes/pins/conversations, reset/erase, the plain-text indexing pipeline, and Ollama/OpenAI-compatible streaming parsers. With a full Xcode installation you can also press **⌘U**; the `Lumina` scheme includes the `LuminaTests` target, and CI runs both SwiftPM and `xcodebuild test`.
 
 To check the real onboarding path against Ollama on this Mac:
 
@@ -152,7 +152,7 @@ To check the real onboarding path against Ollama on this Mac:
 LUMINA_LIVE_OLLAMA=1 ./scripts/test.sh
 ```
 
-That adds one opt-in test for health, model discovery, and the runtime snapshot; it is skipped by default so the suite stays deterministic.
+That adds two opt-in tests: health, model discovery, and the runtime snapshot; plus a real embedding/indexing round-trip that verifies semantic search against your local `embeddinggemma` installation. They are skipped by default so the suite stays deterministic.
 
 The wrapper exists because a Command Line Tools-only installation keeps `Testing.framework` outside SwiftPM's default framework search path. It adds that path only when it is needed.
 
@@ -343,8 +343,8 @@ Sources/Lumina/
 └── Services/     SQLite, index store, inference, search, RAG, extraction, indexing
 AppResources/     Info.plist, entitlements, privacy manifest, asset catalog
 Tests/            Swift Testing suite
-docs/             Architecture notes and screenshot placeholders
-scripts/          Icon generation, test wrapper, local app packaging
+docs/             Architecture, release process, screenshot placeholders
+scripts/          Icon generation, test wrapper, packaging, DMG, notarization
 project.yml       XcodeGen source of truth
 ```
 
@@ -356,6 +356,7 @@ swift build                        # type-check and build the executable
 swift scripts/GenerateAppIcon.swift # regenerate icon PNGs + Contents.json
 xcodegen generate                  # regenerate Lumina.xcodeproj
 CONFIGURATION=debug ./scripts/package_app.sh
+./scripts/make_dmg.sh              # package dist/Lumina-<version>.dmg
 ```
 
 ### Adding a file type

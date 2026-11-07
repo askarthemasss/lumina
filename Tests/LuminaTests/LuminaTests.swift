@@ -158,6 +158,98 @@ struct ConfigurationTests {
     }
 }
 
+// MARK: - Streaming parsers
+
+/// Intercepts URLSession requests so the streaming parsers can be tested
+/// deterministically without a model runtime.
+private final class StreamingStubURLProtocol: URLProtocol {
+    nonisolated(unsafe) static var body = Data()
+    nonisolated(unsafe) static var contentType = "application/x-ndjson"
+
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+    override func startLoading() {
+        guard let url = request.url,
+              let response = HTTPURLResponse(
+                url: url,
+                statusCode: 200,
+                httpVersion: "HTTP/1.1",
+                headerFields: [
+                    "Content-Type": Self.contentType,
+                    "Content-Length": String(Self.body.count)
+                ]
+              ) else {
+            client?.urlProtocol(self, didFailWithError: URLError(.badServerResponse))
+            return
+        }
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Self.body)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
+}
+
+@Suite("Streaming inference", .serialized)
+struct StreamingInferenceTests {
+    private func session() -> URLSession {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [StreamingStubURLProtocol.self]
+        return URLSession(configuration: configuration)
+    }
+
+    @Test("Ollama NDJSON chunks become one answer")
+    func ollamaNDJSONStreaming() async throws {
+        StreamingStubURLProtocol.contentType = "application/x-ndjson"
+        StreamingStubURLProtocol.body = Data("""
+        {"message":{"role":"assistant","content":"Lum"},"done":false}
+        {"message":{"role":"assistant","content":"ina"},"done":false}
+        {"message":{"role":"assistant","content":""},"done":true}
+
+        """.utf8)
+
+        let configuration = InferenceConfiguration(
+            runtime: .ollama,
+            endpoint: "http://127.0.0.1:11434",
+            embeddingModel: "embeddinggemma",
+            chatModel: "test-chat"
+        )
+        let client = try LocalInferenceClient(configuration: configuration, session: session())
+        let answer = try await client.completeChat(
+            model: "test-chat",
+            messages: [ChatPromptMessage(role: .user, content: "Say Lumina.")]
+        )
+        #expect(answer == "Lumina")
+    }
+
+    @Test("OpenAI-compatible SSE chunks become one answer")
+    func openAISSEStreaming() async throws {
+        StreamingStubURLProtocol.contentType = "text/event-stream"
+        StreamingStubURLProtocol.body = Data("""
+        data: {"choices":[{"delta":{"content":"Lum"}}]}
+
+        data: {"choices":[{"delta":{"content":"ina"}}]}
+
+        data: [DONE]
+
+        """.utf8)
+
+        let configuration = InferenceConfiguration(
+            runtime: .openAICompatible,
+            endpoint: "http://127.0.0.1:8080",
+            embeddingModel: "embeddinggemma",
+            chatModel: "test-chat"
+        )
+        let client = try LocalInferenceClient(configuration: configuration, session: session())
+        let answer = try await client.completeChat(
+            model: "test-chat",
+            messages: [ChatPromptMessage(role: .user, content: "Say Lumina.")]
+        )
+        #expect(answer == "Lumina")
+    }
+}
+
 // MARK: - Search query construction
 
 @Suite("Search query construction")
@@ -346,6 +438,66 @@ struct LiveOllamaTests {
         #expect(snapshot.isReachable)
         #expect(snapshot.error == nil)
         #expect(!snapshot.models.isEmpty)
+    }
+
+    @Test("Local embeddings power semantic indexing end to end")
+    func localEmbeddingsPowerSemanticIndexing() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("LuminaLive-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let store = try IndexStore(databaseURL: directory.appendingPathComponent("index.sqlite"))
+        let thumbnails = directory.appendingPathComponent("thumbnails", isDirectory: true)
+        try FileManager.default.createDirectory(at: thumbnails, withIntermediateDirectories: true)
+        let engine = IndexingEngine(store: store, thumbnailsDirectory: thumbnails)
+
+        let folderURL = directory.appendingPathComponent("Notes", isDirectory: true)
+        try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
+        try """
+        The Aurora passed the lighthouse on a foggy Tuesday.
+        The keeper logged the time, the cargo, and the tide.
+        """.write(
+            to: folderURL.appendingPathComponent("notes.txt"),
+            atomically: true,
+            encoding: .utf8
+        )
+
+        let folder = try await store.addFolder(path: folderURL.path, bookmark: nil)
+        let configuration = InferenceConfiguration(
+            runtime: .ollama,
+            endpoint: "http://127.0.0.1:11434",
+            embeddingModel: "embeddinggemma",
+            chatModel: "gemma4:e2b"
+        )
+
+        let summary = await engine.run(
+            folders: [folder],
+            options: .default,
+            configuration: configuration,
+            force: true
+        )
+        #expect(summary.failed == 0)
+        #expect(summary.processed == 1)
+
+        let stats = try await store.stats()
+        #expect(stats.fileCount == 1)
+        #expect(stats.embeddedChunkCount >= 1)
+
+        let client = try LocalInferenceClient(configuration: configuration)
+        let vectors = try await client.embed(
+            texts: ["a ship passing the lighthouse at night"],
+            model: "embeddinggemma"
+        )
+        let query = try #require(vectors.first)
+        #expect(!query.isEmpty)
+
+        let hits = try await store.semanticSearch(
+            queryVector: query,
+            model: LocalInferenceClient.canonicalModelName("embeddinggemma"),
+            filters: SearchFilters()
+        )
+        #expect(hits.contains { $0.file.name == "notes.txt" })
     }
 }
 

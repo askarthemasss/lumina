@@ -56,7 +56,7 @@ final class LocalInferenceClient: Sendable {
     let baseURL: URL
     private let session: URLSession
 
-    init(configuration: InferenceConfiguration) throws {
+    init(configuration: InferenceConfiguration, session: URLSession? = nil) throws {
         guard let url = configuration.baseURL else {
             throw InferenceError.invalidEndpoint
         }
@@ -71,7 +71,7 @@ final class LocalInferenceClient: Sendable {
         sessionConfiguration.timeoutIntervalForResource = 3_600
         sessionConfiguration.waitsForConnectivity = false
         sessionConfiguration.urlCache = nil
-        self.session = URLSession(configuration: sessionConfiguration)
+        self.session = session ?? URLSession(configuration: sessionConfiguration)
     }
 
     static func isLoopback(_ url: URL) -> Bool {
