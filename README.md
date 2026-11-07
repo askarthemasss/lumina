@@ -2,6 +2,8 @@
 
 **Illuminate your local knowledge.**
 
+[![CI](https://github.com/askarthemasss/lumina/actions/workflows/ci.yml/badge.svg)](https://github.com/askarthemasss/lumina/actions/workflows/ci.yml)
+
 Lumina is a native macOS workspace for the files already on your Mac. It indexes folders you choose, searches them by keyword *and* meaning, answers questions from the retrieved passages with citations, and keeps notes and pins beside the sources.
 
 There is no account, no telemetry, no cloud sync, and no upload. Chat and embedding requests only go to a model server running on your own machine.

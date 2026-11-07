@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show toolchain versions
+        run: |
+          sw_vers
+          xcodebuild -version
+          swift --version
+
+      - name: Build with SwiftPM
+        run: swift build
+
+      - name: Run Swift Testing suite
+        run: ./scripts/test.sh
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build and test with Xcode
+        run: |
+          xcodebuild \
+            -project Lumina.xcodeproj \
+            -scheme Lumina \
+            -destination 'platform=macOS' \
+            -derivedDataPath .build/xcode \
+            CODE_SIGNING_ALLOWED=NO \
+            test
