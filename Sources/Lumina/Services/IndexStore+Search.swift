@@ -35,8 +35,16 @@ extension IndexStore {
             }
     }
 
+    /// Common words make FTS return most of the library when a full question
+    /// is used as the query. Normal keyword matching drops them; exact-phrase
+    /// mode bypasses this helper so stop words remain part of the phrase.
+    static func meaningfulTerms(in query: String) -> [String] {
+        searchTerms(in: query).filter { !stopWords.contains($0) }
+    }
+
     static func ftsQuery(from query: String, exactPhrase: Bool) -> String? {
-        let terms = searchTerms(in: query)
+        // Exact-phrase mode keeps stop words: they are part of the phrase.
+        let terms = exactPhrase ? searchTerms(in: query) : meaningfulTerms(in: query)
         guard !terms.isEmpty else { return nil }
         if exactPhrase {
             let phrase = terms.joined(separator: " ").replacingOccurrences(of: "\"", with: "\"\"")
@@ -46,6 +54,21 @@ extension IndexStore {
             .map { "\"\($0.replacingOccurrences(of: "\"", with: "\"\""))\"" }
             .joined(separator: " OR ")
     }
+
+    private static let stopWords: Set<String> = [
+        "a", "about", "after", "all", "also", "an", "and", "any", "are", "as",
+        "at", "be", "because", "been", "before", "being", "between", "both",
+        "but", "by", "can", "could", "did", "do", "does", "doing", "for",
+        "from", "had", "has", "have", "having", "he", "her", "here", "hers",
+        "him", "his", "how", "i", "if", "in", "into", "is", "it", "its",
+        "just", "me", "more", "most", "my", "no", "not", "of", "on", "or",
+        "our", "ours", "out", "over", "she", "should", "so", "some", "such",
+        "than", "that", "the", "their", "theirs", "them", "then", "there",
+        "these", "they", "this", "those", "through", "to", "too", "under",
+        "up", "very", "was", "we", "were", "what", "when", "where", "which",
+        "while", "who", "whom", "why", "will", "with", "would", "you", "your",
+        "yours"
+    ]
 
     private static func filterClause(_ filters: SearchFilters) -> String {
         var clauses: [String] = []
@@ -177,7 +200,11 @@ extension IndexStore {
         filters: SearchFilters,
         limit: Int = 24
     ) throws -> [IndexedFile] {
-        let terms = Self.searchTerms(in: query)
+        let allTerms = Self.meaningfulTerms(in: query)
+        // Substring LIKE turns short tokens into accidents: "4a" matches the
+        // ".m4a" extension. Prefer longer terms when the query has any.
+        let longerTerms = allTerms.filter { $0.count >= 3 }
+        let terms = longerTerms.isEmpty ? allTerms : longerTerms
         guard !terms.isEmpty else { return [] }
         let nameClauses = terms.prefix(3).map { _ in "(f.name LIKE ? OR f.path LIKE ?)" }
             .joined(separator: " OR ")

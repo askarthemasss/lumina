@@ -262,6 +262,23 @@ struct SearchService: Sendable {
         )
     }
 
+    // MARK: Relevance
+
+    /// Cosine similarity is model- and corpus-dependent, and every pair has a
+    /// nonzero score. Without a cutoff, a broad query returns the whole
+    /// library. Keep the tight cluster around the best hit instead; the
+    /// store's low absolute floor already discards near-zero vectors.
+    static func relevantSemanticMatches(
+        _ matches: [SemanticMatch],
+        relativeToBest: Double = 0.9
+    ) -> [SemanticMatch] {
+        guard let best = matches.map(\.similarity).max(), best > 0 else {
+            return []
+        }
+        let floor = best * relativeToBest
+        return matches.filter { $0.similarity >= floor }
+    }
+
     // MARK: Private loaders
 
     private func loadKeyword(query: String, filters: SearchFilters) async -> ([KeywordMatch], String?) {
@@ -292,7 +309,7 @@ struct SearchService: Sendable {
                 model: model,
                 filters: filters
             )
-            return (matches, nil)
+            return (Self.relevantSemanticMatches(matches), nil)
         } catch {
             return ([], error.localizedDescription)
         }
@@ -307,7 +324,7 @@ struct SearchService: Sendable {
             .replacingOccurrences(of: "\n", with: " ")
             .replacingOccurrences(of: "  ", with: " ")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        let terms = IndexStore.searchTerms(in: query)
+        let terms = IndexStore.meaningfulTerms(in: query)
         let lower = collapsed.lowercased()
         var matchRange: Range<String.Index>?
         for term in terms {

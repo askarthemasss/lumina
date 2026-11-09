@@ -119,10 +119,15 @@ final class AppModel {
     var chatError: String?
     private var chatTask: Task<Void, Never>?
 
-    init() throws {
+    init(
+        supportDirectory: URL? = nil,
+        defaults: UserDefaults = .standard
+    ) throws {
         let fileManager = FileManager.default
-        let support = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Lumina", isDirectory: true)
+        let support = supportDirectory ?? fileManager.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        )[0].appendingPathComponent("Lumina", isDirectory: true)
         try fileManager.createDirectory(at: support, withIntermediateDirectories: true)
         let databaseURL = support.appendingPathComponent("lumina.sqlite")
         let thumbs = support.appendingPathComponent("thumbnails", isDirectory: true)
@@ -130,7 +135,7 @@ final class AppModel {
 
         self.dataDirectory = support
         self.thumbnailsDirectory = thumbs
-        self.settings = AppSettings()
+        self.settings = AppSettings(defaults: defaults)
         let store = try IndexStore(databaseURL: databaseURL)
         self.store = store
         self.searchService = SearchService(store: store)

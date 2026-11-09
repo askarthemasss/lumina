@@ -250,6 +250,59 @@ struct StreamingInferenceTests {
     }
 }
 
+// MARK: - Markdown blocks
+
+@Suite("Markdown blocks")
+struct MarkdownBlockTests {
+    @Test("Headings, lists, tables, and code keep their structure")
+    func blockStructure() {
+        let source = """
+        # Field notes
+
+        A first line
+        continues here.
+
+        - one
+        - two
+
+        1. first
+        2. second
+
+        | Name | Value |
+        | --- | --- |
+        | A | 1 |
+
+        ```swift
+        let x = 1
+        ```
+        """
+        let blocks = MarkdownBlock.parse(source)
+        #expect(blocks.contains(.heading(level: 1, text: "Field notes")))
+        #expect(blocks.contains(.paragraph("A first line continues here.")))
+        #expect(blocks.contains(.bullets(["one", "two"])))
+        #expect(blocks.contains(.numbered(["first", "second"])))
+        #expect(blocks.contains(.table(header: ["Name", "Value"], rows: [["A", "1"]])))
+        #expect(blocks.contains(.code("let x = 1")))
+    }
+
+    @Test("Quotes and rules do not swallow the next paragraph")
+    func quoteAndRule() {
+        let blocks = MarkdownBlock.parse("""
+        > A private thought.
+        > A second line.
+
+        ---
+
+        After the rule.
+        """)
+        #expect(blocks == [
+            .quote("A private thought. A second line."),
+            .rule,
+            .paragraph("After the rule.")
+        ])
+    }
+}
+
 // MARK: - Search query construction
 
 @Suite("Search query construction")
@@ -289,6 +342,71 @@ struct SearchQueryTests {
     @Test("Empty query produces no FTS query")
     func emptyQueryProducesNoFTSQuery() {
         #expect(IndexStore.ftsQuery(from: " — ", exactPhrase: false) == nil)
+    }
+
+    @Test("Stop words are omitted from keyword matching")
+    func stopWordsAreOmitted() {
+        #expect(
+            IndexStore.meaningfulTerms(in: "What did the keeper record about the fog?")
+                == ["keeper", "record", "fog"]
+        )
+        #expect(
+            IndexStore.ftsQuery(from: "what did the keeper record", exactPhrase: false)
+                == "\"keeper\" OR \"record\""
+        )
+        #expect(
+            IndexStore.ftsQuery(from: "the fog", exactPhrase: true)
+                == "\"the fog\""
+        )
+        #expect(
+            IndexStore.ftsQuery(from: "what is the", exactPhrase: false) == nil
+        )
+    }
+}
+
+// MARK: - Semantic relevance
+
+@Suite("Semantic relevance")
+struct SemanticRelevanceTests {
+    private func match(_ similarity: Double, id: Int64) -> SemanticMatch {
+        SemanticMatch(
+            chunkID: id,
+            file: IndexedFile(
+                id: id,
+                folderID: nil,
+                path: "/demo/\(id).txt",
+                name: "\(id).txt",
+                kind: .text,
+                fileSize: 10,
+                modifiedAt: Date(),
+                indexedAt: Date(),
+                pageCount: nil,
+                duration: nil,
+                thumbnailPath: nil,
+                chunkCount: 1,
+                isPinned: false,
+                hasEmbeddings: true,
+                errorMessage: nil
+            ),
+            text: "passage",
+            locator: ContentLocator(),
+            similarity: similarity
+        )
+    }
+
+    @Test("Only the cluster near the best cosine survives")
+    func keepsTopCluster() {
+        let matches = [
+            match(0.62, id: 1),
+            match(0.57, id: 2),
+            match(0.51, id: 3),
+            match(0.34, id: 4)
+        ]
+        #expect(
+            SearchService.relevantSemanticMatches(matches).map(\.chunkID) == [1, 2]
+        )
+        #expect(SearchService.relevantSemanticMatches([]).isEmpty)
+        #expect(SearchService.relevantSemanticMatches([match(0, id: 1)]).isEmpty)
     }
 }
 
@@ -542,6 +660,14 @@ final class IndexStoreTests {
             embedding: [0, 1, 0],
             model: "test-embed"
         )
+        _ = try await saveFile(
+            folderID: folder.id,
+            name: "Field Recording.m4a",
+            kind: .audio,
+            text: "Wind across the dune grass.",
+            embedding: [0, 0, 1],
+            model: "test-embed"
+        )
 
         let keyword = try await store.keywordSearch(query: "invoice", filters: SearchFilters())
         #expect(keyword.count == 1)
@@ -564,6 +690,13 @@ final class IndexStoreTests {
         let filenames = try await store.filenameMatches(query: "budget", filters: SearchFilters())
         #expect(filenames.count == 1)
         #expect(filenames.first?.kind == .text)
+
+        // "4a" must not match the ".m4a" extension when longer terms exist.
+        let shortToken = try await store.filenameMatches(
+            query: "budget 4a",
+            filters: SearchFilters()
+        )
+        #expect(shortToken.map(\.name) == ["Budget notes.txt"])
 
         let filtered = try await store.keywordSearch(
             query: "invoice",

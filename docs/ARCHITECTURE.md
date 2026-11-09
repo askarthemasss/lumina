@@ -199,8 +199,8 @@ Per-file extraction or embedding failures do not stop the run. `IndexingEngine` 
 `IndexStore.keywordSearch` builds a safe FTS expression from alphanumeric terms:
 
 - Terms are lowercased, deduplicated, and quoted.
-- Normal mode joins the terms with `OR`.
-- Exact-phrase mode quotes the whole phrase.
+- Normal mode drops common stop words before joining the remaining terms with `OR`, so a full question does not match most of the library.
+- Exact-phrase mode keeps stop words and quotes the whole phrase.
 - The SQL uses `snippet(chunks_fts, 0, '[[', ']]', '…', 34)` and `bm25(chunks_fts)` for ordering.
 - Filters add typed clauses for kind, folder IDs, and modified date range.
 
@@ -210,9 +210,11 @@ Per-file extraction or embedding failures do not stop the run. `IndexingEngine` 
 
 This is brute-force search by design: it is fast enough for a personal library (tens of thousands of chunks) and avoids an ANN index that would need rebuilding and tuning. The seam is `BoundedTopK` plus the SQL query, so an ANN index can be added later without changing callers.
 
+Cosine scores are model- and corpus-dependent, so `SearchService.relevantSemanticMatches` then keeps only the candidates within 90% of the best score. Without that relative cutoff, a broad query returns every file in the library because every pair has a nonzero similarity.
+
 ### 6.3 File-name matching
 
-`filenameMatches` performs parameterized `LIKE` matching on name and path for up to three terms. Results without extracted chunks become synthetic hits with id `-fileID` so a file is still discoverable.
+`filenameMatches` performs parameterized `LIKE` matching on name and path for up to three terms. When a query contains terms of three or more characters, shorter tokens are ignored so identifiers such as `4a` do not match a `.m4a` extension. Results without extracted chunks become synthetic hits with id `-fileID` so a file is still discoverable.
 
 ### 6.4 Fusion
 

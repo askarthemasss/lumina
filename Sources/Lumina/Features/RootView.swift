@@ -6,6 +6,11 @@ struct RootView: View {
     @Environment(AppSettings.self) private var settings
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
+    /// Disabled by the offscreen documentation renderer, which supplies a
+    /// prepared demo index and must not start a live scan.
+    var bootstrapOnAppear: Bool = true
+    var settingsInitialTab: SettingsTab = .general
+
     var body: some View {
         @Bindable var model = model
 
@@ -16,11 +21,18 @@ struct RootView: View {
             ))
             .navigationSplitViewColumnWidth(min: 212, ideal: 228, max: 264)
         } detail: {
-            detail
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Palette.canvas)
+            // GeometryReader keeps the detail column tied to the window
+            // viewport. Without it, a tall scrollable screen can report its
+            // ideal content height and make the split view — and in manual
+            // hosting, the window — grow past the frame the user chose.
+            GeometryReader { proxy in
+                detail
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+            }
+            .background(Palette.canvas)
         }
         .navigationSplitViewStyle(.balanced)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Palette.canvas)
         .tint(settings.accent.color)
         .accentColor(settings.accent.color)
@@ -52,7 +64,9 @@ struct RootView: View {
                 .accentColor(settings.accent.color)
         }
         .task {
-            await model.bootstrap()
+            if bootstrapOnAppear {
+                await model.bootstrap()
+            }
             applyWindowAppearance()
         }
         .task(id: model.infoMessage) {
@@ -80,7 +94,7 @@ struct RootView: View {
         case .timeline:
             TimelineView()
         case .settings:
-            SettingsView()
+            SettingsView(initialTab: settingsInitialTab)
         }
     }
 

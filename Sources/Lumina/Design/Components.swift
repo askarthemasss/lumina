@@ -536,29 +536,338 @@ struct StatusPill: View {
 
 // MARK: - Markdown
 
+/// Renders the block structure that `Text(AttributedString)` discards:
+/// headings, lists, quotes, fenced code, and pipe tables. Inline styling still
+/// comes from Foundation's Markdown parser, so links and emphasis behave the
+/// same as the rest of the app.
 struct LuminaMarkdownText: View {
     let text: String
 
     var body: some View {
-        Group {
-            if let attributed = try? AttributedString(
-                markdown: text,
-                options: .init(
-                    allowsExtendedAttributes: false,
-                    interpretedSyntax: .full,
-                    failurePolicy: .returnPartiallyParsedIfPossible
-                )
-            ) {
-                Text(attributed)
-            } else {
-                Text(text)
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(Array(MarkdownBlock.parse(text).enumerated()), id: \.offset) { _, block in
+                blockView(block)
             }
         }
         .font(LuminaType.body)
         .lineSpacing(3.5)
         .foregroundStyle(Palette.label)
         .textSelection(.enabled)
-        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private func blockView(_ block: MarkdownBlock) -> some View {
+        switch block {
+        case let .heading(level, content):
+            inline(content)
+                .font(.system(
+                    size: level <= 1 ? 18 : (level == 2 ? 15.5 : 13.5),
+                    weight: .semibold
+                ))
+                .padding(.top, level <= 2 ? 3 : 1)
+
+        case let .paragraph(content):
+            inline(content)
+                .fixedSize(horizontal: false, vertical: true)
+
+        case let .bullets(items):
+            VStack(alignment: .leading, spacing: 5) {
+                ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("•")
+                            .foregroundStyle(Color.accentColor)
+                            .frame(width: 8)
+                        inline(item)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+
+        case let .numbered(items):
+            VStack(alignment: .leading, spacing: 5) {
+                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("\(index + 1).")
+                            .foregroundStyle(Palette.tertiary)
+                            .monospacedDigit()
+                            .frame(minWidth: 17, alignment: .trailing)
+                        inline(item)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+
+        case let .quote(content):
+            HStack(alignment: .top, spacing: 10) {
+                RoundedRectangle(cornerRadius: 1)
+                    .fill(Color.accentColor.opacity(0.55))
+                    .frame(width: 2.5)
+                inline(content)
+                    .foregroundStyle(Palette.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.vertical, 1)
+
+        case let .code(content):
+            Text(content)
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundStyle(Palette.label)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .fill(Palette.separator.opacity(0.1))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .strokeBorder(Palette.separator.opacity(0.45), lineWidth: 0.7)
+                )
+
+        case let .table(header, rows):
+            Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 6) {
+                GridRow {
+                    ForEach(Array(header.enumerated()), id: \.offset) { _, cell in
+                        inline(cell)
+                            .font(LuminaType.captionEmphasis)
+                    }
+                }
+                Hairline()
+                    .gridCellColumns(max(1, header.count))
+                ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
+                    GridRow {
+                        ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
+                            inline(cell)
+                                .font(LuminaType.caption)
+                                .foregroundStyle(Palette.secondary)
+                        }
+                    }
+                }
+            }
+            .padding(10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .fill(Palette.separator.opacity(0.07))
+            )
+
+        case .rule:
+            Hairline()
+                .padding(.vertical, 2)
+        }
+    }
+
+    private func inline(_ source: String) -> Text {
+        if let attributed = try? AttributedString(
+            markdown: source,
+            options: .init(
+                allowsExtendedAttributes: false,
+                interpretedSyntax: .inlineOnlyPreservingWhitespace,
+                failurePolicy: .returnPartiallyParsedIfPossible
+            )
+        ) {
+            return Text(attributed)
+        }
+        return Text(source)
+    }
+}
+
+// MARK: - Markdown blocks
+
+enum MarkdownBlock: Equatable {
+    case heading(level: Int, text: String)
+    case paragraph(String)
+    case bullets([String])
+    case numbered([String])
+    case quote(String)
+    case code(String)
+    case table(header: [String], rows: [[String]])
+    case rule
+
+    static func parse(_ source: String) -> [MarkdownBlock] {
+        let lines = source
+            .replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
+            .components(separatedBy: "\n")
+        var blocks: [MarkdownBlock] = []
+        var index = 0
+
+        while index < lines.count {
+            let line = lines[index]
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+
+            if trimmed.isEmpty {
+                index += 1
+                continue
+            }
+
+            if trimmed.hasPrefix("```") {
+                var code: [String] = []
+                index += 1
+                while index < lines.count,
+                      lines[index].trimmingCharacters(in: .whitespaces) != "```" {
+                    code.append(lines[index])
+                    index += 1
+                }
+                if index < lines.count { index += 1 }
+                blocks.append(.code(code.joined(separator: "\n")))
+                continue
+            }
+
+            if let heading = heading(from: trimmed) {
+                blocks.append(.heading(level: heading.level, text: heading.text))
+                index += 1
+                continue
+            }
+
+            if isTableSeparator(after: index, in: lines) {
+                let header = cells(in: lines[index])
+                index += 2
+                var rows: [[String]] = []
+                while index < lines.count {
+                    let row = lines[index].trimmingCharacters(in: .whitespaces)
+                    guard !row.isEmpty, row.contains("|") else { break }
+                    rows.append(normalized(cells(in: row), count: header.count))
+                    index += 1
+                }
+                if !header.isEmpty {
+                    blocks.append(.table(header: header, rows: rows))
+                }
+                continue
+            }
+
+            if isRule(trimmed) {
+                blocks.append(.rule)
+                index += 1
+                continue
+            }
+
+            if let item = bullet(from: line) {
+                var items = [item]
+                index += 1
+                while index < lines.count, let next = bullet(from: lines[index]) {
+                    items.append(next)
+                    index += 1
+                }
+                blocks.append(.bullets(items))
+                continue
+            }
+
+            if let item = numbered(from: line) {
+                var items = [item]
+                index += 1
+                while index < lines.count, let next = numbered(from: lines[index]) {
+                    items.append(next)
+                    index += 1
+                }
+                blocks.append(.numbered(items))
+                continue
+            }
+
+            if let quoted = quoteLine(from: line) {
+                var parts = [quoted]
+                index += 1
+                while index < lines.count, let next = quoteLine(from: lines[index]) {
+                    parts.append(next)
+                    index += 1
+                }
+                blocks.append(.quote(parts.joined(separator: " ")))
+                continue
+            }
+
+            var paragraph: [String] = [trimmed]
+            index += 1
+            while index < lines.count {
+                let next = lines[index]
+                let nextTrimmed = next.trimmingCharacters(in: .whitespaces)
+                if nextTrimmed.isEmpty || startsBlock(at: index, in: lines) {
+                    break
+                }
+                paragraph.append(nextTrimmed)
+                index += 1
+            }
+            blocks.append(.paragraph(paragraph.joined(separator: " ")))
+        }
+
+        return blocks
+    }
+
+    private static func heading(from line: String) -> (level: Int, text: String)? {
+        let hashes = line.prefix(while: { $0 == "#" })
+        guard (1...6).contains(hashes.count) else { return nil }
+        let rest = line.dropFirst(hashes.count)
+        guard rest.first == " " else { return nil }
+        let text = rest.trimmingCharacters(in: .whitespaces)
+        guard !text.isEmpty else { return nil }
+        return (hashes.count, text)
+    }
+
+    private static func bullet(from line: String) -> String? {
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        guard trimmed.count > 2 else { return nil }
+        for prefix in ["- ", "* ", "+ "] where trimmed.hasPrefix(prefix) {
+            let text = trimmed.dropFirst(prefix.count).trimmingCharacters(in: .whitespaces)
+            return text.isEmpty ? nil : text
+        }
+        return nil
+    }
+
+    private static func numbered(from line: String) -> String? {
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        guard let range = trimmed.range(of: #"^\d+[.)]\s+"#, options: .regularExpression) else {
+            return nil
+        }
+        let text = trimmed[range.upperBound...].trimmingCharacters(in: .whitespaces)
+        return text.isEmpty ? nil : String(text)
+    }
+
+    private static func quoteLine(from line: String) -> String? {
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        guard trimmed.hasPrefix(">") else { return nil }
+        let text = trimmed.dropFirst().trimmingCharacters(in: .whitespaces)
+        return text.isEmpty ? nil : text
+    }
+
+    private static func isRule(_ line: String) -> Bool {
+        let compact = line.replacingOccurrences(of: " ", with: "")
+        return compact == "---" || compact == "***" || compact == "___"
+    }
+
+    private static func isTableSeparator(after index: Int, in lines: [String]) -> Bool {
+        guard index + 1 < lines.count, lines[index].contains("|") else { return false }
+        let separator = cells(in: lines[index + 1])
+        guard !separator.isEmpty else { return false }
+        return separator.allSatisfy { cell in
+            let stripped = cell.replacingOccurrences(of: ":", with: "")
+            return !stripped.isEmpty
+                && stripped.allSatisfy { $0 == "-" }
+        }
+    }
+
+    private static func cells(in line: String) -> [String] {
+        var trimmed = line.trimmingCharacters(in: .whitespaces)
+        if trimmed.hasPrefix("|") { trimmed.removeFirst() }
+        if trimmed.hasSuffix("|") { trimmed.removeLast() }
+        return trimmed
+            .components(separatedBy: "|")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+    }
+
+    private static func normalized(_ cells: [String], count: Int) -> [String] {
+        if cells.count == count { return cells }
+        if cells.count > count { return Array(cells.prefix(count)) }
+        return cells + Array(repeating: "", count: count - cells.count)
+    }
+
+    private static func startsBlock(at index: Int, in lines: [String]) -> Bool {
+        let trimmed = lines[index].trimmingCharacters(in: .whitespaces)
+        if trimmed.isEmpty || trimmed.hasPrefix("```") { return true }
+        if heading(from: trimmed) != nil || isRule(trimmed) { return true }
+        if isTableSeparator(after: index, in: lines) { return true }
+        return bullet(from: lines[index]) != nil
+            || numbered(from: lines[index]) != nil
+            || quoteLine(from: lines[index]) != nil
     }
 }
 

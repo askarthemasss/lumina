@@ -10,10 +10,15 @@ struct SettingsView: View {
 
     var isStandaloneWindow: Bool = false
 
-    @State private var tab: SettingsTab = .general
+    @State private var tab: SettingsTab
     @State private var endpointDraft = ""
     @State private var showResetConfirmation = false
     @State private var showEraseConfirmation = false
+
+    init(isStandaloneWindow: Bool = false, initialTab: SettingsTab = .general) {
+        self.isStandaloneWindow = isStandaloneWindow
+        _tab = State(initialValue: initialTab)
+    }
 
     var body: some View {
         ScreenScroll(maxWidth: 810) {
@@ -1102,7 +1107,7 @@ struct SettingsView: View {
 
 // MARK: - Tab
 
-private enum SettingsTab: String, CaseIterable, Identifiable {
+enum SettingsTab: String, CaseIterable, Identifiable {
     case general
     case models
     case indexing

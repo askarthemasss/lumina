@@ -14,25 +14,25 @@ There is no account, no telemetry, no cloud sync, and no upload. Chat and embedd
 
 ## Screenshots
 
-Real captures belong in `docs/screenshots/`. The layout is designed for a 1600 × 1000 window in both appearances.
+These images are rendered offscreen from the shipping SwiftUI views against a synthetic demo library. No personal files, paths, or screen-recording permission are involved. See [`docs/screenshots/README.md`](docs/screenshots/README.md) for details and the regeneration command.
 
-> **Placeholder — Home.** `docs/screenshots/home.png`  
-> Onboarding, local model status, recent files, and the setup guide.
+[![Lumina Home](docs/screenshots/home.png)](docs/screenshots/home.png)
 
-> **Placeholder — Search.** `docs/screenshots/search.png`  
-> Hybrid search with type, folder, and date filters, highlighted snippets, and a preview pane.
+**Home.** Setup status, local model readiness, recent files, and pinned material.
 
-> **Placeholder — Ask Lumina.** `docs/screenshots/chat.png`  
-> A streamed, citation-backed answer beside its sources.
+| Search | Ask Lumina |
+| :---: | :---: |
+| [![Hybrid search](docs/screenshots/search.png)](docs/screenshots/search.png) | [![Grounded answers](docs/screenshots/chat.png)](docs/screenshots/chat.png) |
+| Keyword and semantic results with filters and passage previews. | Streamed answers with inspectable citations and source cards. |
 
-> **Placeholder — Library.** `docs/screenshots/library.png`  
-> Grid and list views with thumbnails, pins, and file details.
+| Library | Timeline |
+| :---: | :---: |
+| [![Library grid](docs/screenshots/library.png)](docs/screenshots/library.png) | [![Timeline](docs/screenshots/timeline.png)](docs/screenshots/timeline.png) |
+| Grid and list views with generated thumbnails, pins, and details. | Indexed files, notes, conversations, and pins in one local record. |
 
-> **Placeholder — Timeline.** `docs/screenshots/timeline.png`  
-> Notes, conversations, pins, and recently indexed files in one chronological view.
+[![Settings](docs/screenshots/settings.png)](docs/screenshots/settings.png)
 
-> **Placeholder — Settings.** `docs/screenshots/settings.png`  
-> Runtime, models, indexing rules, privacy controls, and local data.
+**Settings.** Runtime, models, indexing rules, privacy controls, and local data.
 
 ---
 
@@ -53,6 +53,7 @@ Most "AI knowledge base" tools ask you to upload your work to someone else's com
 - SQLite **FTS5** keyword search with snippets and exact-phrase mode.
 - **Local embedding search** over normalized vectors, using cosine similarity.
 - **Reciprocal rank fusion** merges keyword and semantic results instead of letting one score scale dominate.
+- Question-style queries drop stop words for keyword matching, and semantic results keep only the cluster near the best vector match, so search stays focused instead of returning the whole library.
 - Filters for content type, folder, and modification date.
 - File-name matches and verbatim query bonuses for invoice numbers, error codes, and proper names.
 - A preview pane that shows the extracted passages behind each result, with page and line locators where available.
@@ -144,7 +145,7 @@ The packaging script assembles a minimal `.app`, compiles the generated `.icns`,
 ./scripts/test.sh
 ```
 
-The suite uses **Swift Testing** (27 deterministic tests) and covers vector math, chunking, HTML extraction, model recommendations, loopback enforcement, FTS query construction, keyword/semantic/filename search and filtering, notes/pins/conversations, reset/erase, the plain-text indexing pipeline, and Ollama/OpenAI-compatible streaming parsers. With a full Xcode installation you can also press **⌘U**; the `Lumina` scheme includes the `LuminaTests` target, and CI runs both SwiftPM and `xcodebuild test`.
+The suite uses **Swift Testing**: 31 deterministic tests plus three opt-in tests. It covers vector math, chunking, HTML extraction, model recommendations, loopback enforcement, Markdown block parsing, FTS query construction, keyword/semantic/filename search and filtering, notes/pins/conversations, reset/erase, the plain-text indexing pipeline, and Ollama/OpenAI-compatible streaming parsers. With a full Xcode installation you can also press **⌘U**; the `Lumina` scheme includes the `LuminaTests` target, and CI runs both SwiftPM and `xcodebuild test`.
 
 To check the real onboarding path against Ollama on this Mac:
 
@@ -152,7 +153,15 @@ To check the real onboarding path against Ollama on this Mac:
 LUMINA_LIVE_OLLAMA=1 ./scripts/test.sh
 ```
 
-That adds two opt-in tests: health, model discovery, and the runtime snapshot; plus a real embedding/indexing round-trip that verifies semantic search against your local `embeddinggemma` installation. They are skipped by default so the suite stays deterministic.
+That adds two live tests: health, model discovery, and the runtime snapshot; plus a real embedding/indexing round-trip that verifies semantic search against your local `embeddinggemma` installation. They are skipped by default so the suite stays deterministic.
+
+To regenerate the README screenshots:
+
+```bash
+LUMINA_RENDER_SNAPSHOTS=1 ./scripts/test.sh
+```
+
+The third opt-in test renders the shipping views offscreen with a synthetic library. It needs no Screen Recording permission and produces `docs/screenshots/*.png` at 3200 × 2000.
 
 The wrapper exists because a Command Line Tools-only installation keeps `Testing.framework` outside SwiftPM's default framework search path. It adds that path only when it is needed.
 
@@ -343,7 +352,7 @@ Sources/Lumina/
 └── Services/     SQLite, index store, inference, search, RAG, extraction, indexing
 AppResources/     Info.plist, entitlements, privacy manifest, asset catalog
 Tests/            Swift Testing suite
-docs/             Architecture, release process, screenshot placeholders
+docs/             Architecture, release process, and screenshots
 scripts/          Icon generation, test wrapper, packaging, DMG, notarization
 project.yml       XcodeGen source of truth
 ```
@@ -384,7 +393,9 @@ Lumina v1 is intentionally focused. The following are **not** implemented and ar
 - Automatic photo clustering, duplicate detection, or media folder reorganization.
 - Aggressive filesystem monitoring (the app polls changed files on an interval instead).
 
-Natural next steps, in rough order: embedding-model change detection with incremental re-embedding, duplicate/near-duplicate detection using Vision feature prints, saved searches, export of answers with citations, and a signed/notarized release pipeline.
+Natural next steps, in rough order: embedding-model change detection with incremental re-embedding, duplicate/near-duplicate detection using Vision feature prints, saved searches, and export of answers with citations.
+
+The signed, notarized release workflow is already in the repository; publishing a build only requires Developer ID and notarization credentials. See [`docs/RELEASING.md`](docs/RELEASING.md).
 
 ## License
 

@@ -216,8 +216,16 @@ struct TimelineView: View {
     // MARK: Actions
 
     private func noteText(for item: TimelineItem) -> String? {
-        guard item.kind == .note, let noteID = item.noteID else { return nil }
-        return model.notes.first { $0.id == noteID }?.text
+        guard item.kind == .note,
+              let noteID = item.noteID,
+              let text = model.notes.first(where: { $0.id == noteID })?.text else {
+            return nil
+        }
+        // The first line becomes the row title, so only show what follows it.
+        let lines = text.split(whereSeparator: \.isNewline)
+        guard lines.count > 1 else { return nil }
+        let remainder = lines.dropFirst().joined(separator: " ")
+        return remainder.isEmpty ? nil : remainder
     }
 
     private func open(_ item: TimelineItem) {
