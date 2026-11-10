@@ -10,17 +10,28 @@ The app is intentionally unsandboxed. See [Why isn't Lumina sandboxed?](../READM
 
 ---
 
+## Prerequisites
+
+- An active [Apple Developer Program](https://developer.apple.com/programs/enroll/) membership. Individual enrollment costs $99 per year and usually takes one to two days to approve.
+- Admin access to the GitHub repository, so you can add Actions secrets.
+- A **Developer ID Application** certificate. This is separate from an Apple Development certificate and is only available after enrollment is approved.
+
+If you have not enrolled yet, do that first. Nothing else here can produce a distributable build without it.
+
 ## One-time setup
 
-### 1. Export the certificate
+### 1. Create and export the certificate
 
-In **Keychain Access → My Certificates**, find *Developer ID Application: …* and export it as a password-protected `.p12`.
+These steps work without a full Xcode installation:
 
-For CI, base64-encode it:
+1. Open **Keychain Access → Certificate Assistant → Request a Certificate from a Certificate Authority**.
+2. Enter your email and a common name, choose **Saved to disk**, and save the certificate signing request (`.certSigningRequest`).
+3. Sign in to [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/certificates/list) and choose **Certificates → + → Developer ID Application**.
+4. Upload the signing request, download the resulting `.cer`, and double-click it to install it in your login keychain.
+5. Confirm that **Keychain Access → My Certificates** shows *Developer ID Application: …* with its private key attached.
+6. Right-click the certificate, choose **Export**, select `.p12`, and set a password. This file and password go to CI; never commit them.
 
-```bash
-base64 -i DeveloperID.p12 | pbcopy
-```
+Copy the ten-character **Team ID** from [Membership Details](https://developer.apple.com/account/#/membership/).
 
 ### 2. Store notary credentials locally
 
@@ -37,11 +48,17 @@ The profile lives in your login keychain. Do not commit it.
 
 ### 3. Configure GitHub Actions secrets
 
-Add these repository secrets under **Settings → Secrets and variables → Actions**:
+The helper prompts for the `.p12`, its password, the signing identity, and the notary credentials, then stores all seven secrets through `gh`:
+
+```bash
+./scripts/configure_release_secrets.sh
+```
+
+It sends values over standard input, so they do not appear in shell history or process arguments. If you prefer to add them by hand, use **Settings → Secrets and variables → Actions**:
 
 | Secret | Value |
 | --- | --- |
-| `MACOS_CERTIFICATE` | Base64 of the `.p12` file |
+| `MACOS_CERTIFICATE` | Base64 of the `.p12` file (`base64 -i DeveloperID.p12`) |
 | `MACOS_CERTIFICATE_PASSWORD` | Password used when exporting the `.p12` |
 | `MACOS_SIGNING_IDENTITY` | Full identity name, e.g. `Developer ID Application: Your Name (TEAMID)` |
 | `KEYCHAIN_PASSWORD` | Any random password; used only for the temporary CI keychain |
