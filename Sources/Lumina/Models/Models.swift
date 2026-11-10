@@ -397,7 +397,7 @@ struct InferenceConfiguration: Sendable, Equatable {
         runtime: .ollama,
         endpoint: "http://127.0.0.1:11434",
         embeddingModel: "embeddinggemma",
-        chatModel: "gemma4:e2b"
+        chatModel: "gemma4:e2b-it-qat"
     )
 }
 
@@ -443,8 +443,10 @@ struct ModelRecommendation: Sendable, Equatable {
     }
 
     static func recommended(forMemory bytes: UInt64) -> ModelRecommendation {
-        // Ollama's Gemma 4 Q4 builds are roughly 4.6 GB (e2b), 8 GB (12b),
-        // 17 GB (26b), and 20 GB (31b). Keep headroom for macOS and SQLite.
+        // The default e2b tag can pull a 7.5 GB nvfp4 build that needs about
+        // 6.9 GiB at runtime, which does not fit on an 8 GB Mac. The QAT build
+        // is 4.3 GB and is the small-memory default. Larger tiers use the
+        // regular builds: 12b ~8 GB, 26b ~17 GB, and 31b ~20 GB.
         if bytes >= 64_000_000_000 {
             return .init(memoryBytes: bytes, chatModel: "gemma4:31b", embeddingModel: "embeddinggemma",
                          chatApproxSizeGB: 20, note: "Recommended for 64 GB and above.")
@@ -455,8 +457,8 @@ struct ModelRecommendation: Sendable, Equatable {
             return .init(memoryBytes: bytes, chatModel: "gemma4:12b", embeddingModel: "embeddinggemma",
                          chatApproxSizeGB: 8, note: "Recommended for 16 GB and above.")
         } else {
-            return .init(memoryBytes: bytes, chatModel: "gemma4:e2b", embeddingModel: "embeddinggemma",
-                         chatApproxSizeGB: 4.6, note: "Recommended for 8 GB systems. For better answers, close memory-heavy apps or choose a smaller context.")
+            return .init(memoryBytes: bytes, chatModel: "gemma4:e2b-it-qat", embeddingModel: "embeddinggemma",
+                         chatApproxSizeGB: 4.3, note: "The quantized QAT build fits comfortably on 8 GB systems. For better answers, close memory-heavy apps or choose a smaller context.")
         }
     }
 }

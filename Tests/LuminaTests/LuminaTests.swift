@@ -111,11 +111,12 @@ struct TextChunkerTests {
 struct ConfigurationTests {
     @Test("Recommended models follow unified memory")
     func memoryBasedModelRecommendations() {
-        #expect(ModelRecommendation.recommended(forMemory: 8_000_000_000).chatModel == "gemma4:e2b")
+        #expect(ModelRecommendation.recommended(forMemory: 8_000_000_000).chatModel == "gemma4:e2b-it-qat")
         #expect(ModelRecommendation.recommended(forMemory: 16_000_000_000).chatModel == "gemma4:12b")
         #expect(ModelRecommendation.recommended(forMemory: 32_000_000_000).chatModel == "gemma4:26b")
         #expect(ModelRecommendation.recommended(forMemory: 64_000_000_000).chatModel == "gemma4:31b")
         #expect(ModelRecommendation.recommended(forMemory: 8_000_000_000).embeddingModel == "embeddinggemma")
+        #expect(ModelRecommendation.recommended(forMemory: 8_000_000_000).chatApproxSizeGB == 4.3)
     }
 
     @Test("Pull commands cover both models")
@@ -145,7 +146,7 @@ struct ConfigurationTests {
             runtime: .ollama,
             endpoint: "https://api.example.com",
             embeddingModel: "embeddinggemma",
-            chatModel: "gemma4:e2b"
+            chatModel: "gemma4:e2b-it-qat"
         )
         do {
             _ = try LocalInferenceClient(configuration: configuration)
@@ -450,7 +451,7 @@ final class IndexingPipelineTests {
             runtime: .ollama,
             endpoint: "http://127.0.0.1:1",
             embeddingModel: "embeddinggemma",
-            chatModel: "gemma4:e2b"
+            chatModel: "gemma4:e2b-it-qat"
         )
 
         let summary = await engine.run(
@@ -507,7 +508,7 @@ final class IndexingPipelineTests {
             runtime: .ollama,
             endpoint: "http://127.0.0.1:1",
             embeddingModel: "embeddinggemma",
-            chatModel: "gemma4:e2b"
+            chatModel: "gemma4:e2b-it-qat"
         )
         var options = IndexingOptions.default
         options.excludedPatterns = ["*.psd"]
@@ -541,7 +542,7 @@ struct LiveOllamaTests {
             runtime: .ollama,
             endpoint: "http://127.0.0.1:11434",
             embeddingModel: "embeddinggemma",
-            chatModel: "gemma4:e2b"
+            chatModel: "gemma4:e2b-it-qat"
         )
         let client = try LocalInferenceClient(configuration: configuration)
         let version = try await client.health()
@@ -586,7 +587,7 @@ struct LiveOllamaTests {
             runtime: .ollama,
             endpoint: "http://127.0.0.1:11434",
             embeddingModel: "embeddinggemma",
-            chatModel: "gemma4:e2b"
+            chatModel: "gemma4:e2b-it-qat"
         )
 
         let summary = await engine.run(
@@ -616,6 +617,77 @@ struct LiveOllamaTests {
             filters: SearchFilters()
         )
         #expect(hits.contains { $0.file.name == "notes.txt" })
+    }
+
+    @Test("A grounded answer streams from a local chat model")
+    func groundedAnswerStreams() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("LuminaLiveChat-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let store = try IndexStore(databaseURL: directory.appendingPathComponent("index.sqlite"))
+        let thumbnails = directory.appendingPathComponent("thumbnails", isDirectory: true)
+        try FileManager.default.createDirectory(at: thumbnails, withIntermediateDirectories: true)
+        let engine = IndexingEngine(store: store, thumbnailsDirectory: thumbnails)
+
+        let folderURL = directory.appendingPathComponent("Logs", isDirectory: true)
+        try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
+        try """
+        On 14 October, the keeper lit the lantern at 04:10.
+        The aurora watch that night recorded a KP index of 6.
+        """.write(
+            to: folderURL.appendingPathComponent("keeper.txt"),
+            atomically: true,
+            encoding: .utf8
+        )
+
+        let folder = try await store.addFolder(path: folderURL.path, bookmark: nil)
+        let base = InferenceConfiguration(
+            runtime: .ollama,
+            endpoint: "http://127.0.0.1:11434",
+            embeddingModel: "embeddinggemma",
+            chatModel: "gemma4:e2b-it-qat"
+        )
+        let summary = await engine.run(
+            folders: [folder],
+            options: .default,
+            configuration: base,
+            force: true
+        )
+        #expect(summary.failed == 0)
+
+        let models = try await LocalInferenceClient(configuration: base).listModels()
+        let chatModel = try #require(
+            models.first { $0.name == "gemma4:e2b-it-qat" }
+                ?? models.first { !$0.isEmbedding && $0.sizeBytes < 6_000_000_000 },
+            "Install gemma4:e2b-it-qat or another chat model under 6 GB to run this test."
+        )
+        let configuration = InferenceConfiguration(
+            runtime: .ollama,
+            endpoint: "http://127.0.0.1:11434",
+            embeddingModel: "embeddinggemma",
+            chatModel: chatModel.name
+        )
+
+        let rag = RAGService(store: store)
+        let request = await rag.prepare(
+            question: "When did the keeper light the lantern, and what was the KP index?",
+            mode: .answer,
+            history: [],
+            configuration: configuration
+        )
+        #expect(request.hasSources)
+        #expect(!request.citations.isEmpty)
+
+        var answer = ""
+        for try await token in try await rag.stream(request, configuration: configuration) {
+            answer += token
+        }
+        #expect(!answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        let normalized = answer.lowercased()
+        #expect(normalized.contains("04:10") || normalized.contains("4:10"))
+        #expect(normalized.contains("6") || normalized.contains("six"))
     }
 }
 

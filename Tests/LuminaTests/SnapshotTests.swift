@@ -81,7 +81,7 @@ private final class SnapshotFixture {
         settings.endpoint = "http://127.0.0.1:11434"
         settings.runtimeKind = .ollama
         settings.embeddingModel = "embeddinggemma"
-        settings.chatModel = "gemma4:e2b"
+        settings.chatModel = "gemma4:e2b-it-qat"
         settings.appearance = .light
         settings.accent = .sapphire
         settings.autoIndexEnabled = true
@@ -320,8 +320,8 @@ private final class SnapshotFixture {
             ),
             models: [
                 LocalModel(
-                    name: "gemma4:e2b",
-                    sizeBytes: 4_600_000_000,
+                    name: "gemma4:e2b-it-qat",
+                    sizeBytes: 4_300_000_000,
                     modifiedAt: Date(),
                     family: "gemma4",
                     parameterSize: "2B",

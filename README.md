@@ -145,7 +145,7 @@ The packaging script assembles a minimal `.app`, compiles the generated `.icns`,
 ./scripts/test.sh
 ```
 
-The suite uses **Swift Testing**: 31 deterministic tests plus three opt-in tests. It covers vector math, chunking, HTML extraction, model recommendations, loopback enforcement, Markdown block parsing, FTS query construction, keyword/semantic/filename search and filtering, notes/pins/conversations, reset/erase, the plain-text indexing pipeline, and Ollama/OpenAI-compatible streaming parsers. With a full Xcode installation you can also press **⌘U**; the `Lumina` scheme includes the `LuminaTests` target, and CI runs both SwiftPM and `xcodebuild test`.
+The suite uses **Swift Testing**: 31 deterministic tests plus four opt-in tests. It covers vector math, chunking, HTML extraction, model recommendations, loopback enforcement, Markdown block parsing, FTS query construction, keyword/semantic/filename search and filtering, notes/pins/conversations, reset/erase, the plain-text indexing pipeline, and Ollama/OpenAI-compatible streaming parsers. With a full Xcode installation you can also press **⌘U**; the `Lumina` scheme includes the `LuminaTests` target, and CI runs both SwiftPM and `xcodebuild test`.
 
 To check the real onboarding path against Ollama on this Mac:
 
@@ -153,7 +153,7 @@ To check the real onboarding path against Ollama on this Mac:
 LUMINA_LIVE_OLLAMA=1 ./scripts/test.sh
 ```
 
-That adds two live tests: health, model discovery, and the runtime snapshot; plus a real embedding/indexing round-trip that verifies semantic search against your local `embeddinggemma` installation. They are skipped by default so the suite stays deterministic.
+That adds three live tests: health, model discovery, and the runtime snapshot; a real embedding/indexing round-trip that verifies semantic search against your local `embeddinggemma` installation; and a grounded RAG answer streamed from a local chat model (`gemma4:e2b-it-qat` when installed, otherwise any installed chat model under 6 GB). They are skipped by default so the suite stays deterministic.
 
 To regenerate the README screenshots:
 
@@ -177,18 +177,20 @@ Then pull one embedding model and one chat model:
 
 ```bash
 ollama pull embeddinggemma
-ollama pull gemma4:e2b     # < 16 GB
-# ollama pull gemma4:12b   # 16–31 GB
-# ollama pull gemma4:26b   # 32–63 GB
-# ollama pull gemma4:31b   # 64 GB+
+ollama pull gemma4:e2b-it-qat  # < 16 GB
+# ollama pull gemma4:12b       # 16–31 GB
+# ollama pull gemma4:26b       # 32–63 GB
+# ollama pull gemma4:31b       # 64 GB+
 ```
 
 | Unified memory | Recommended chat model | Approx. download |
 | --- | --- | --- |
-| Under 16 GB | `gemma4:e2b` | ~4.6 GB |
+| Under 16 GB | `gemma4:e2b-it-qat` | ~4.3 GB |
 | 16–31 GB | `gemma4:12b` | ~8 GB |
 | 32–63 GB | `gemma4:26b` | ~17 GB |
 | 64 GB+ | `gemma4:31b` | ~20 GB |
+
+On 8 GB Macs, prefer the QAT build. The default `gemma4:e2b` tag can pull a larger nvfp4 variant that needs about 6.9 GiB at runtime, which may fail to load while macOS and Lumina are running. The QAT build keeps the same small-model family at roughly 4.3 GB.
 
 The embedding model is `embeddinggemma` at every tier. Lumina also has a **Use Recommended** and **Download Recommended** flow in Settings → Models, with progress and cancel support. If you already have models installed, choose them from the installed-model menu instead of downloading more.
 
